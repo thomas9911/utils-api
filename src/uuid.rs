@@ -1,8 +1,9 @@
 use axum::extract::Query;
 use axum::response::{IntoResponse, Response};
 use serde::Deserialize;
+use utoipa::{IntoParams, ToSchema};
 
-#[derive(Deserialize)]
+#[derive(Deserialize, IntoParams)]
 pub struct UuidParams {
     #[serde(default = "uuid_default_format")]
     format: Format,
@@ -10,7 +11,7 @@ pub struct UuidParams {
     version: Version,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, ToSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum Format {
     Braced,
@@ -19,7 +20,7 @@ pub enum Format {
     Urn,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, ToSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum Version {
     V4,
@@ -34,6 +35,16 @@ fn uuid_default_version() -> Version {
     Version::V4
 }
 
+#[utoipa::path(
+    get,
+    path = "/api/uuid",
+    params(
+        UuidParams
+    ),
+    responses(
+        (status = 200, body = String, example = json!("4ffa0c85-4031-4293-8515-3396ac5fe716"))
+    )
+)]
 pub async fn get_uuid(Query(params): Query<UuidParams>) -> Response {
     let uuid = match params.version {
         Version::V4 => uuid::Uuid::new_v4(),

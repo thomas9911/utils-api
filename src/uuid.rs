@@ -12,7 +12,7 @@ pub struct UuidParams {
 }
 
 #[derive(Deserialize, ToSchema)]
-#[serde(rename_all = "snake_case")]
+#[serde(rename_all = "kebab-case")]
 pub enum Format {
     Braced,
     Hyphenated,
@@ -21,7 +21,7 @@ pub enum Format {
 }
 
 #[derive(Deserialize, ToSchema)]
-#[serde(rename_all = "snake_case")]
+#[serde(rename_all = "kebab-case")]
 pub enum Version {
     V4,
     V7,

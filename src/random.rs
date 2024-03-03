@@ -10,7 +10,7 @@ pub struct RandomParams {
 }
 
 #[derive(Deserialize, ToSchema)]
-#[serde(rename_all = "snake_case")]
+#[serde(rename_all = "kebab-case")]
 pub enum Output {
     U32,
     U64,

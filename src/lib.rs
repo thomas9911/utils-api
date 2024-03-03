@@ -1,6 +1,8 @@
+use axum::response::Redirect;
 use axum::routing::get;
 use axum::Router;
 use serde::Deserialize;
+use tokio::signal::ctrl_c;
 use utoipa::OpenApi;
 use utoipa_rapidoc::RapiDoc;
 
@@ -33,17 +35,28 @@ impl Config {
     }
 }
 
+fn api_router() -> Router {
+    Router::new()
+        .route("/uuid", get(uuid::get_uuid))
+        .route("/random", get(random::get_random))
+}
+
 pub async fn main() -> anyhow::Result<()> {
     let config = Config::new();
 
     let router = Router::new()
         .merge(RapiDoc::with_openapi("/api-docs/openapi.json", ApiDoc::openapi()).path("/api-docs"))
-        .route("/", get(|| async { "Hello, World!" }))
-        .route("/api/uuid", get(uuid::get_uuid))
-        .route("/api/random", get(random::get_random));
+        .nest("/api", api_router())
+        .route("/", get(|| async { Redirect::permanent("/api-docs") }));
 
     let listener = tokio::net::TcpListener::bind(("0.0.0.0", config.port)).await?;
-    axum::serve(listener, router).await?;
+    axum::serve(listener, router)
+        .with_graceful_shutdown(signal())
+        .await?;
 
     Ok(())
+}
+
+async fn signal() {
+    ctrl_c().await.expect("failed to listen for event")
 }

@@ -3,7 +3,7 @@ mod common;
 use common::setup;
 
 #[tokio::test]
-async fn uuid_default_returns_hypenated_uuid() -> anyhow::Result<()> {
+async fn uuid_default_returns_hyphenated_uuid() -> anyhow::Result<()> {
     let ctx = setup().await?;
     let resp = ctx.get("api/uuid").await?;
     let uuid = resp.text().await?;
@@ -14,11 +14,12 @@ async fn uuid_default_returns_hypenated_uuid() -> anyhow::Result<()> {
 }
 
 #[tokio::test]
-async fn uuid_returns_hypenated_uuid() -> anyhow::Result<()> {
+async fn uuid_returns_hyphenated_uuid() -> anyhow::Result<()> {
     let ctx = setup().await?;
-    let resp = ctx.get("api/uuid?format=hypenated").await?;
+    let resp = ctx.get("api/uuid?format=hyphenated").await?;
     let uuid = resp.text().await?;
 
+    dbg!(&uuid);
     assert_eq!(uuid.len(), 36);
     assert_eq!(uuid.chars().filter(|ch| ch == &'-').count(), 4);
     Ok(())

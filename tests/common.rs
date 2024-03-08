@@ -6,7 +6,8 @@ use tokio::sync::OnceCell;
 
 static ONCE: OnceCell<CargoRun> = OnceCell::const_new();
 
-const HOST: &str = "http://localhost";
+const HOST: Option<&str> = option_env!("TEST_HOST");
+const DEFAULT_HOST: &str = "http://localhost";
 
 #[derive(Debug)]
 pub struct TestContext<'a> {
@@ -27,15 +28,17 @@ impl<'a> TestContext<'a> {
     }
 
     pub async fn get(&self, path: &str) -> reqwest::Result<Response> {
+        let host = HOST.unwrap_or(DEFAULT_HOST);
         self.client
-            .get(format!("{HOST}:{}/{path}", self.port))
+            .get(format!("{host}:{}/{path}", self.port))
             .send()
             .await
     }
 
     pub async fn post<T: Into<Body>>(&self, path: &str, body: T) -> reqwest::Result<Response> {
+        let host = HOST.unwrap_or(DEFAULT_HOST);
         self.client
-            .post(format!("{HOST}:{}/{path}", self.port))
+            .post(format!("{host}:{}/{path}", self.port))
             .body(body)
             .send()
             .await

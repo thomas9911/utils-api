@@ -1,5 +1,5 @@
 use escargot::CargoRun;
-use reqwest::Response;
+use reqwest::{Body, Client, Response};
 use std::marker::PhantomData;
 use std::process::Child;
 use tokio::sync::OnceCell;
@@ -12,6 +12,7 @@ const HOST: &str = "http://localhost";
 pub struct TestContext<'a> {
     child_process: Child,
     port: u16,
+    client: Client,
     _phantom: PhantomData<&'a ()>,
 }
 
@@ -20,12 +21,24 @@ impl<'a> TestContext<'a> {
         TestContext {
             child_process,
             port,
+            client: Client::new(),
             _phantom: PhantomData::default(),
         }
     }
 
     pub async fn get(&self, path: &str) -> reqwest::Result<Response> {
-        reqwest::get(format!("{HOST}:{}/{path}", self.port)).await
+        self.client
+            .get(format!("{HOST}:{}/{path}", self.port))
+            .send()
+            .await
+    }
+
+    pub async fn post<T: Into<Body>>(&self, path: &str, body: T) -> reqwest::Result<Response> {
+        self.client
+            .post(format!("{HOST}:{}/{path}", self.port))
+            .body(body)
+            .send()
+            .await
     }
 }
 

@@ -1,17 +1,23 @@
 use axum::response::Redirect;
-use axum::routing::get;
+use axum::routing::{get, post};
 use axum::Router;
 use serde::Deserialize;
 use tokio::signal::ctrl_c;
 use utoipa::OpenApi;
 use utoipa_rapidoc::RapiDoc;
 
+mod graphql;
 mod random;
 mod uuid;
 
 #[derive(OpenApi)]
 #[openapi(
-    paths(random::get_random, uuid::get_uuid,),
+    paths(
+        random::get_random,
+        uuid::get_uuid,
+        graphql::post_prettier,
+        graphql::post_minifier
+    ),
     components(schemas(random::Output, uuid::Format, uuid::Version))
 )]
 pub struct ApiDoc;
@@ -39,6 +45,8 @@ fn api_router() -> Router {
     Router::new()
         .route("/uuid", get(uuid::get_uuid))
         .route("/random", get(random::get_random))
+        .route("/graphql/prettier", post(graphql::post_prettier))
+        .route("/graphql/minifier", post(graphql::post_minifier))
 }
 
 pub async fn main() -> anyhow::Result<()> {

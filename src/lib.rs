@@ -8,6 +8,7 @@ use utoipa_rapidoc::RapiDoc;
 
 mod graphql;
 mod random;
+mod sql;
 mod uuid;
 
 #[derive(OpenApi)]
@@ -15,6 +16,7 @@ mod uuid;
     paths(
         random::get_random,
         uuid::get_uuid,
+        sql::post_prettier,
         graphql::post_prettier,
         graphql::post_minifier
     ),
@@ -45,6 +47,7 @@ fn api_router() -> Router {
     Router::new()
         .route("/uuid", get(uuid::get_uuid))
         .route("/random", get(random::get_random))
+        .route("/sql/prettier", post(sql::post_prettier))
         .route("/graphql/prettier", post(graphql::post_prettier))
         .route("/graphql/minifier", post(graphql::post_minifier))
 }

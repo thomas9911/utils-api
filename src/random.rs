@@ -15,6 +15,8 @@ pub enum Output {
     U32,
     U64,
     U128,
+    F32,
+    F64,
 }
 
 fn random_default_output() -> Output {
@@ -36,6 +38,8 @@ pub async fn get_random(Query(params): Query<RandomParams>) -> Response {
         Output::U32 => rand::random::<u32>().to_string(),
         Output::U64 => rand::random::<u64>().to_string(),
         Output::U128 => rand::random::<u128>().to_string(),
+        Output::F32 => rand::random::<f32>().to_string(),
+        Output::F64 => rand::random::<f64>().to_string(),
     }
     .into_response()
 }

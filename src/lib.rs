@@ -15,6 +15,7 @@ mod uuid;
 #[openapi(
     paths(
         random::get_random,
+        random::get_random_stream,
         uuid::get_uuid,
         sql::post_prettier,
         graphql::post_prettier,
@@ -47,6 +48,7 @@ fn api_router() -> Router {
     Router::new()
         .route("/uuid", get(uuid::get_uuid))
         .route("/random", get(random::get_random))
+        .route("/random/stream", get(random::get_random_stream))
         .route("/sql/prettier", post(sql::post_prettier))
         .route("/graphql/prettier", post(graphql::post_prettier))
         .route("/graphql/minifier", post(graphql::post_minifier))

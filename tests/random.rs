@@ -63,3 +63,34 @@ async fn random_default_returns_f64() -> anyhow::Result<()> {
 
     Ok(())
 }
+
+#[tokio::test]
+async fn random_stream_returns_1024_bytes() -> anyhow::Result<()> {
+    let ctx = setup().await?;
+    let resp = ctx.get("api/random/stream").await?;
+    let data = resp.bytes().await?;
+    assert!(data.len() == 1024);
+
+    Ok(())
+}
+
+#[tokio::test]
+async fn random_stream_returns_65535_bytes() -> anyhow::Result<()> {
+    let ctx = setup().await?;
+    let resp = ctx.get("api/random/stream?size=65535").await?;
+    let data = resp.bytes().await?;
+
+    // rounds to nearest multiple of 8
+    assert!(data.len() == 65536);
+
+    Ok(())
+}
+
+#[tokio::test]
+async fn random_stream_returns_error_when_size_too_high() -> anyhow::Result<()> {
+    let ctx = setup().await?;
+    let resp = ctx.get("api/random/stream?size=65600").await?;
+    assert!(resp.status() == 400);
+
+    Ok(())
+}

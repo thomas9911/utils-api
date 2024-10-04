@@ -7,6 +7,7 @@ use utoipa::OpenApi;
 use utoipa_rapidoc::RapiDoc;
 
 mod graphql;
+mod javascript;
 mod random;
 mod sql;
 mod uuid;
@@ -19,7 +20,8 @@ mod uuid;
         uuid::get_uuid,
         sql::post_prettier,
         graphql::post_prettier,
-        graphql::post_minifier
+        graphql::post_minifier,
+        javascript::post_minifier,
     ),
     components(schemas(random::Output, uuid::Format, uuid::Version))
 )]
@@ -52,6 +54,7 @@ fn api_router() -> Router {
         .route("/sql/prettier", post(sql::post_prettier))
         .route("/graphql/prettier", post(graphql::post_prettier))
         .route("/graphql/minifier", post(graphql::post_minifier))
+        .route("/javascript/minifier", post(javascript::post_minifier))
 }
 
 pub async fn main() -> anyhow::Result<()> {

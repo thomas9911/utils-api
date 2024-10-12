@@ -154,7 +154,16 @@ async function main() {
   const args = parseArgs(Deno.args, {
     boolean: ["pretty", "minify"],
     string: ["format", "version", "size", "output"],
+    alias: { h: "help" },
   });
+
+  if (
+    args.help || args._.some((arg) => ["h", "help"].includes(arg as string))
+  ) {
+    console.log(HELP);
+    return;
+  }
+
   try {
     switch (args._[0]) {
       case "uuid":

@@ -1,8 +1,0 @@
-{
-    allSong {
-        results {
-            id
-            title
-        }
-    }
-}

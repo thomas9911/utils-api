@@ -1,0 +1,8 @@
+{
+    allSong {
+        results {
+            id
+            title
+        }
+    }
+}

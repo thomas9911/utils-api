@@ -1,0 +1,5 @@
+{
+  "tasks": {
+    "run": "deno run --allow-net='localhost,utils.tostitijd.com' --allow-read='.env' --allow-env='UTILS_API_URL' main.ts"
+  }
+}

@@ -18,6 +18,7 @@ const MINIFIED_EXAMPLE: &str = "{allSongs{results{id}}}";
 #[utoipa::path(
     post,
     path = "/api/graphql/prettier",
+    operation_id = "post_graphql_prettier",
     responses(
         (status = 200, body = String, content_type = "text/plain", example = json!(PRETTY_EXAMPLE))
     ),
@@ -42,6 +43,7 @@ pub async fn post_prettier(req: Request) -> Response {
 #[utoipa::path(
     post,
     path = "/api/graphql/minifier",
+    operation_id = "post_graphql_minifier",
     responses(
         (status = 200, body = String, content_type = "text/plain", example = json!(MINIFIED_EXAMPLE))
     ),

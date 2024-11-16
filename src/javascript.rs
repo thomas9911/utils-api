@@ -12,6 +12,7 @@ const MINIFIED_EXAMPLE: &str = "var a=(()=>1)";
 #[utoipa::path(
     post,
     path = "/api/javascript/minifier",
+    operation_id = "post_javascript_minifier",
     responses(
         (status = 200, body = String, content_type = "text/plain", example = json!(MINIFIED_EXAMPLE))
     ),
